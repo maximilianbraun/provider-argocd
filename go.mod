@@ -5,8 +5,8 @@ go 1.20
 require (
 	github.com/argoproj/argo-cd/v2 v2.8.4
 	github.com/argoproj/gitops-engine v0.7.1-0.20230607163028-425d65e07695
-	github.com/crossplane/crossplane-runtime v1.13.0
-	github.com/crossplane/crossplane-tools v0.0.0-20230714144037-2684f4bc7638
+	github.com/crossplane/crossplane-runtime v1.14.1
+	github.com/crossplane/crossplane-tools v0.0.0-20230925130601-628280f8bf79
 	github.com/golang/mock v1.6.0
 	github.com/google/go-cmp v0.6.0
 	github.com/jmattheis/goverter v0.17.4
