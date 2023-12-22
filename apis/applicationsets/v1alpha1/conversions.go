@@ -13,20 +13,7 @@ import (
 // goverter:extend ExtV1JSONToRuntimeRawExtension
 // +k8s:deepcopy-gen=false
 type Converter interface {
-
-	// goverter:ignore ServerRef
-	// goverter:ignore ServerSelector
-	FromArgoDestination(in argocdv1alpha1.ApplicationDestination) ApplicationDestination
-	FromArgoDestinationP(in *argocdv1alpha1.ApplicationDestination) *ApplicationDestination
-
-	// goverter:ignore ServerRef
-	// goverter:ignore ServerSelector
-	ToArgoDestination(in ApplicationDestination) argocdv1alpha1.ApplicationDestination
-	ToArgoDestinationP(in *ApplicationDestination) *argocdv1alpha1.ApplicationDestination
-
-	ToArgoApplicationSpec(in *ApplicationParameters) *argocdv1alpha1.ApplicationSpec
-
-	FromArgoApplicationStatus(in *argocdv1alpha1.ApplicationStatus) *ArgoApplicationStatus
+	ToArgoApplicationSpec(in *ApplicationSetParameters) *argocdv1alpha1.ApplicationSetSpec
 }
 
 // ExtV1JSONToRuntimeRawExtension converts an extv1.JSON into a
