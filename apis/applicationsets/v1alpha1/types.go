@@ -17,11 +17,8 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"reflect"
-
 	apiextv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/util/intstr"
 
 	xpv1 "github.com/crossplane/crossplane-runtime/apis/common/v1"
@@ -42,6 +39,7 @@ type ApplicationSetParameters struct {
 	ApplyNestedSelectors bool `json:"applyNestedSelectors,omitempty" protobuf:"bytes,8,name=applyNestedSelectors"`
 }
 
+// ApplicationPreservedFields ApplicationSetObservation are the preseverable fields on an Application
 type ApplicationPreservedFields struct {
 	Annotations []string `json:"annotations,omitempty" protobuf:"bytes,1,name=annotations"`
 }
@@ -52,21 +50,26 @@ type ApplicationSetStrategy struct {
 	RollingSync *ApplicationSetRolloutStrategy `json:"rollingSync,omitempty" protobuf:"bytes,2,opt,name=rollingSync"`
 	// RollingUpdate *ApplicationSetRolloutStrategy `json:"rollingUpdate,omitempty" protobuf:"bytes,3,opt,name=rollingUpdate"`
 }
+
+// ApplicationSetRolloutStrategy define the rollout strategy for the ApplicationSet
 type ApplicationSetRolloutStrategy struct {
 	Steps []ApplicationSetRolloutStep `json:"steps,omitempty" protobuf:"bytes,1,opt,name=steps"`
 }
 
+// ApplicationSetRolloutStep define the rollout step for the ApplicationSet
 type ApplicationSetRolloutStep struct {
 	MatchExpressions []ApplicationMatchExpression `json:"matchExpressions,omitempty" protobuf:"bytes,1,opt,name=matchExpressions"`
 	MaxUpdate        *intstr.IntOrString          `json:"maxUpdate,omitempty" protobuf:"bytes,2,opt,name=maxUpdate"`
 }
 
+// ApplicationMatchExpression define expressions to match Applications
 type ApplicationMatchExpression struct {
 	Key      string   `json:"key,omitempty" protobuf:"bytes,1,opt,name=key"`
 	Operator string   `json:"operator,omitempty" protobuf:"bytes,2,opt,name=operator"`
 	Values   []string `json:"values,omitempty" protobuf:"bytes,3,opt,name=values"`
 }
 
+// ApplicationSetGenerator defines the generators for the ApplicationSet
 type ApplicationSetGenerator struct {
 	List                    *ListGenerator        `json:"list,omitempty" protobuf:"bytes,1,name=list"`
 	Clusters                *ClusterGenerator     `json:"clusters,omitempty" protobuf:"bytes,2,name=clusters"`
@@ -154,6 +157,7 @@ type ApplicationSetNestedGenerator struct {
 	Plugin *PluginGenerator `json:"plugin,omitempty" protobuf:"bytes,10,name=plugin"`
 }
 
+// ApplicationSetNestedGenerators represents a generator nested within a combination-type generator
 type ApplicationSetNestedGenerators []ApplicationSetNestedGenerator
 
 // NestedMatrixGenerator is a MatrixGenerator nested under another combination-type generator (MatrixGenerator or
@@ -167,6 +171,7 @@ type NestedMatrixGenerator struct {
 	Generators ApplicationSetTerminalGenerators `json:"generators" protobuf:"bytes,1,name=generators"`
 }
 
+// ApplicationSetTerminalGenerators represents a generator nested within a nested generator
 type ApplicationSetTerminalGenerators []ApplicationSetTerminalGenerator
 
 // ApplicationSetTerminalGenerator represents a generator nested within a nested generator (for example, a list within
@@ -198,7 +203,7 @@ type ClusterGenerator struct {
 	Values map[string]string `json:"values,omitempty" protobuf:"bytes,3,name=values"`
 }
 
-// DuckType defines a generator to match against clusters registered with ArgoCD.
+// DuckTypeGenerator defines a generator to match against clusters registered with ArgoCD.
 type DuckTypeGenerator struct {
 	// ConfigMapRef is a ConfigMap with the duck type definitions needed to retrieve the data
 	//              this includes apiVersion(group/version), kind, matchKey and validation settings
@@ -214,6 +219,7 @@ type DuckTypeGenerator struct {
 	Values map[string]string `json:"values,omitempty" protobuf:"bytes,6,name=values"`
 }
 
+// GitGenerator defines a generator that scrapes a Git repo to find candidate resources.
 type GitGenerator struct {
 	RepoURL             string                      `json:"repoURL" protobuf:"bytes,1,name=repoURL"`
 	Directories         []GitDirectoryGeneratorItem `json:"directories,omitempty" protobuf:"bytes,2,name=directories"`
@@ -227,11 +233,13 @@ type GitGenerator struct {
 	Values map[string]string `json:"values,omitempty" protobuf:"bytes,8,name=values"`
 }
 
+// GitDirectoryGeneratorItem defines a directory to scan for resources.
 type GitDirectoryGeneratorItem struct {
 	Path    string `json:"path" protobuf:"bytes,1,name=path"`
 	Exclude bool   `json:"exclude,omitempty" protobuf:"bytes,2,name=exclude"`
 }
 
+// GitFileGeneratorItem defines a file to scan for resources.
 type GitFileGeneratorItem struct {
 	Path string `json:"path" protobuf:"bytes,1,name=path"`
 }
@@ -341,6 +349,7 @@ type SCMProviderGeneratorAzureDevOps struct {
 	AllBranches bool `json:"allBranches,omitempty" protobuf:"varint,9,opt,name=allBranches"`
 }
 
+// TagFilter defines tags to filter from
 type TagFilter struct {
 	Key   string `json:"key" protobuf:"bytes,1,opt,name=key"`
 	Value string `json:"value,omitempty" protobuf:"bytes,2,opt,name=value"`
@@ -423,7 +432,7 @@ type PullRequestGeneratorAzureDevOps struct {
 	Labels []string `json:"labels,omitempty" protobuf:"bytes,6,rep,name=labels"`
 }
 
-// PullRequestGenerator defines connection info specific to GitHub.
+// PullRequestGeneratorGithub defines connection info specific to GitHub.
 type PullRequestGeneratorGithub struct {
 	// GitHub org or user to scan. Required.
 	Owner string `json:"owner" protobuf:"bytes,1,opt,name=owner"`
@@ -509,13 +518,16 @@ type SecretRef struct {
 	Key        string `json:"key" protobuf:"bytes,2,opt,name=key"`
 }
 
+// PluginConfigMapRef defines a reference to a ConfigMap containing a plugin.
 type PluginConfigMapRef struct {
 	// Name of the ConfigMap
 	Name string `json:"name" protobuf:"bytes,1,opt,name=name"`
 }
 
+// PluginParameters defines the parameters to pass to a plugin.
 type PluginParameters map[string]apiextv1.JSON
 
+// PluginInput defines the input to a plugin.
 type PluginInput struct {
 	// Parameters contains the information to pass to the plugin. It is a map. The keys must be strings, and the
 	// values can be any type.
@@ -560,7 +572,7 @@ type ApplicationSetSpec struct {
 // A ApplicationSetStatus represents the observed state of a ApplicationSet.
 type ApplicationSetStatus struct {
 	xpv1.ResourceStatus `json:",inline"`
-	AtProvider          ApplicationSetObservation `json:"atProvider,omitempty"`
+	AtProvider          ArgoApplicationSetStatus `json:"atProvider,omitempty"`
 }
 
 // +kubebuilder:object:root=true
@@ -587,16 +599,4 @@ type ApplicationSetList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []ApplicationSet `json:"items"`
-}
-
-// ApplicationSet type metadata.
-var (
-	ApplicationSetKind             = reflect.TypeOf(ApplicationSet{}).Name()
-	ApplicationSetGroupKind        = schema.GroupKind{Group: Group, Kind: ApplicationSetKind}.String()
-	ApplicationSetKindAPIVersion   = ApplicationSetKind + "." + SchemeGroupVersion.String()
-	ApplicationSetGroupVersionKind = SchemeGroupVersion.WithKind(ApplicationSetKind)
-)
-
-func init() {
-	SchemeBuilder.Register(&ApplicationSet{}, &ApplicationSetList{})
 }

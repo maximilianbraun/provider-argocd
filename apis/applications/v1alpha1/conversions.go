@@ -7,22 +7,22 @@ import (
 )
 
 // Converter helps to convert ArgoCD types to api types of this provider and vise-versa
+// From & To shall both be defined for each type conversion, to prevent diverge from ArgoCD Types
 // goverter:converter
 // goverter:useZeroValueOnPointerInconsistency
 // goverter:ignoreUnexported
 // goverter:extend ExtV1JSONToRuntimeRawExtension
+// goverter:struct:comment // +k8s:deepcopy-gen=false
+// goverter:output:file ./zz_generated.conversion.go
+// goverter:output:package github.com/crossplane-contrib/provider-argocd/apis/applications/v1alpha1
 // +k8s:deepcopy-gen=false
 type Converter interface {
 
 	// goverter:ignore ServerRef
 	// goverter:ignore ServerSelector
 	FromArgoDestination(in argocdv1alpha1.ApplicationDestination) ApplicationDestination
-	FromArgoDestinationP(in *argocdv1alpha1.ApplicationDestination) *ApplicationDestination
 
-	// goverter:ignore ServerRef
-	// goverter:ignore ServerSelector
 	ToArgoDestination(in ApplicationDestination) argocdv1alpha1.ApplicationDestination
-	ToArgoDestinationP(in *ApplicationDestination) *argocdv1alpha1.ApplicationDestination
 
 	ToArgoApplicationSpec(in *ApplicationParameters) *argocdv1alpha1.ApplicationSpec
 

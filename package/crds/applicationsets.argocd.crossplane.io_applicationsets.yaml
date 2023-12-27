@@ -70,10 +70,12 @@ spec:
                     type: boolean
                   generators:
                     items:
+                      description: ApplicationSetGenerator defines the generators
+                        for the ApplicationSet
                       properties:
                         clusterDecisionResource:
-                          description: DuckType defines a generator to match against
-                            clusters registered with ArgoCD.
+                          description: DuckTypeGenerator defines a generator to match
+                            against clusters registered with ArgoCD.
                           properties:
                             configMapRef:
                               description: ConfigMapRef is a ConfigMap with the duck
@@ -2221,9 +2223,13 @@ spec:
                               type: object
                           type: object
                         git:
+                          description: GitGenerator defines a generator that scrapes
+                            a Git repo to find candidate resources.
                           properties:
                             directories:
                               items:
+                                description: GitDirectoryGeneratorItem defines a directory
+                                  to scan for resources.
                                 properties:
                                   exclude:
                                     type: boolean
@@ -2235,6 +2241,8 @@ spec:
                               type: array
                             files:
                               items:
+                                description: GitFileGeneratorItem defines a file to
+                                  scan for resources.
                                 properties:
                                   path:
                                     type: string
@@ -4295,8 +4303,8 @@ spec:
                                   (MatrixGenerator or MergeGenerator).
                                 properties:
                                   clusterDecisionResource:
-                                    description: DuckType defines a generator to match
-                                      against clusters registered with ArgoCD.
+                                    description: DuckTypeGenerator defines a generator
+                                      to match against clusters registered with ArgoCD.
                                     properties:
                                       configMapRef:
                                         description: ConfigMapRef is a ConfigMap with
@@ -6752,9 +6760,13 @@ spec:
                                         type: object
                                     type: object
                                   git:
+                                    description: GitGenerator defines a generator
+                                      that scrapes a Git repo to find candidate resources.
                                     properties:
                                       directories:
                                         items:
+                                          description: GitDirectoryGeneratorItem defines
+                                            a directory to scan for resources.
                                           properties:
                                             exclude:
                                               type: boolean
@@ -6766,6 +6778,8 @@ spec:
                                         type: array
                                       files:
                                         items:
+                                          description: GitFileGeneratorItem defines
+                                            a file to scan for resources.
                                           properties:
                                             path:
                                               type: string
@@ -9120,6 +9134,8 @@ spec:
                                       info specific to Plugin.
                                     properties:
                                       configMapRef:
+                                        description: PluginConfigMapRef defines a
+                                          reference to a ConfigMap containing a plugin.
                                         properties:
                                           name:
                                             description: Name of the ConfigMap
@@ -9128,6 +9144,8 @@ spec:
                                         - name
                                         type: object
                                       input:
+                                        description: PluginInput defines the input
+                                          to a plugin.
                                         properties:
                                           parameters:
                                             additionalProperties:
@@ -11779,6 +11797,8 @@ spec:
                                             description: TagFilters provides the tag
                                               filter(s) for repo discovery
                                             items:
+                                              description: TagFilter defines tags
+                                                to filter from
                                               properties:
                                                 key:
                                                   type: string
@@ -14305,8 +14325,8 @@ spec:
                                   (MatrixGenerator or MergeGenerator).
                                 properties:
                                   clusterDecisionResource:
-                                    description: DuckType defines a generator to match
-                                      against clusters registered with ArgoCD.
+                                    description: DuckTypeGenerator defines a generator
+                                      to match against clusters registered with ArgoCD.
                                     properties:
                                       configMapRef:
                                         description: ConfigMapRef is a ConfigMap with
@@ -16762,9 +16782,13 @@ spec:
                                         type: object
                                     type: object
                                   git:
+                                    description: GitGenerator defines a generator
+                                      that scrapes a Git repo to find candidate resources.
                                     properties:
                                       directories:
                                         items:
+                                          description: GitDirectoryGeneratorItem defines
+                                            a directory to scan for resources.
                                           properties:
                                             exclude:
                                               type: boolean
@@ -16776,6 +16800,8 @@ spec:
                                         type: array
                                       files:
                                         items:
+                                          description: GitFileGeneratorItem defines
+                                            a file to scan for resources.
                                           properties:
                                             path:
                                               type: string
@@ -19130,6 +19156,8 @@ spec:
                                       info specific to Plugin.
                                     properties:
                                       configMapRef:
+                                        description: PluginConfigMapRef defines a
+                                          reference to a ConfigMap containing a plugin.
                                         properties:
                                           name:
                                             description: Name of the ConfigMap
@@ -19138,6 +19166,8 @@ spec:
                                         - name
                                         type: object
                                       input:
+                                        description: PluginInput defines the input
+                                          to a plugin.
                                         properties:
                                           parameters:
                                             additionalProperties:
@@ -21789,6 +21819,8 @@ spec:
                                             description: TagFilters provides the tag
                                               filter(s) for repo discovery
                                             items:
+                                              description: TagFilter defines tags
+                                                to filter from
                                               properties:
                                                 key:
                                                   type: string
@@ -24302,6 +24334,8 @@ spec:
                             to Plugin.
                           properties:
                             configMapRef:
+                              description: PluginConfigMapRef defines a reference
+                                to a ConfigMap containing a plugin.
                               properties:
                                 name:
                                   description: Name of the ConfigMap
@@ -24310,6 +24344,7 @@ spec:
                               - name
                               type: object
                             input:
+                              description: PluginInput defines the input to a plugin.
                               properties:
                                 parameters:
                                   additionalProperties:
@@ -26648,6 +26683,8 @@ spec:
                                   description: TagFilters provides the tag filter(s)
                                     for repo discovery
                                   items:
+                                    description: TagFilter defines tags to filter
+                                      from
                                     properties:
                                       key:
                                         type: string
@@ -27985,6 +28022,8 @@ spec:
                       type: string
                     type: array
                   preservedFields:
+                    description: ApplicationPreservedFields ApplicationSetObservation
+                      are the preseverable fields on an Application
                     properties:
                       annotations:
                         items:
@@ -27996,12 +28035,18 @@ spec:
                       are updated in sequence.
                     properties:
                       rollingSync:
+                        description: ApplicationSetRolloutStrategy define the rollout
+                          strategy for the ApplicationSet
                         properties:
                           steps:
                             items:
+                              description: ApplicationSetRolloutStep define the rollout
+                                step for the ApplicationSet
                               properties:
                                 matchExpressions:
                                   items:
+                                    description: ApplicationMatchExpression define
+                                      expressions to match Applications
                                     properties:
                                       key:
                                         type: string
@@ -29141,8 +29186,75 @@ spec:
               ApplicationSet.
             properties:
               atProvider:
-                description: ApplicationSetObservation are the observable fields of
+                description: ArgoApplicationSetStatus are the observable fields of
                   a ApplicationSet.
+                properties:
+                  applicationStatus:
+                    items:
+                      description: ApplicationSetApplicationStatus contains details
+                        about each Application managed by the ApplicationSet
+                      properties:
+                        application:
+                          description: Application contains the name of the Application
+                            resource
+                          type: string
+                        lastTransitionTime:
+                          description: LastTransitionTime is the time the status was
+                            last updated
+                          format: date-time
+                          type: string
+                        message:
+                          description: Message contains human-readable message indicating
+                            details about the status
+                          type: string
+                        status:
+                          description: 'Status contains the AppSet''s perceived status
+                            of the managed Application resource: (Waiting, Pending,
+                            Progressing, Healthy)'
+                          type: string
+                        step:
+                          description: Step tracks which step this Application should
+                            be updated in
+                          type: string
+                      required:
+                      - application
+                      - message
+                      - status
+                      - step
+                      type: object
+                    type: array
+                  conditions:
+                    items:
+                      description: ApplicationSetCondition contains details about
+                        an applicationset condition, which is usually an error or
+                        warning
+                      properties:
+                        lastTransitionTime:
+                          description: LastTransitionTime is the time the condition
+                            was last observed
+                          format: date-time
+                          type: string
+                        message:
+                          description: Message contains human-readable message indicating
+                            details about condition
+                          type: string
+                        reason:
+                          description: Single word camelcase representing the reason
+                            for the status eg ErrorOccurred
+                          type: string
+                        status:
+                          description: True/False/Unknown
+                          type: string
+                        type:
+                          description: Type is an applicationset condition type
+                          type: string
+                      required:
+                      - message
+                      - reason
+                      - status
+                      - type
+                      type: object
+                    type: array
                 type: object
               conditions:
                 description: Conditions of the resource.

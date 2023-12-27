@@ -14,13 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// Package v1alpha1 contains the v1alpha1 group Sample resources of the argocd provider.
-// +kubebuilder:object:generate=true
-// +groupName=applicationsets.argocd.crossplane.io
-// +versionName=v1alpha1
 package v1alpha1
 
 import (
+	"reflect"
+
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"sigs.k8s.io/controller-runtime/pkg/scheme"
 )
@@ -38,3 +36,15 @@ var (
 	// SchemeBuilder is used to add go types to the GroupVersionKind scheme
 	SchemeBuilder = &scheme.Builder{GroupVersion: SchemeGroupVersion}
 )
+
+// ApplicationSet type metadata.
+var (
+	ApplicationSetKind             = reflect.TypeOf(ApplicationSet{}).Name()
+	ApplicationSetGroupKind        = schema.GroupKind{Group: Group, Kind: ApplicationSetKind}.String()
+	ApplicationSetKindAPIVersion   = ApplicationSetKind + "." + SchemeGroupVersion.String()
+	ApplicationSetGroupVersionKind = SchemeGroupVersion.WithKind(ApplicationSetKind)
+)
+
+func init() {
+	SchemeBuilder.Register(&ApplicationSet{}, &ApplicationSetList{})
+}

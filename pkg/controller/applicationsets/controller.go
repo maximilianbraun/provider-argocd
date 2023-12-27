@@ -18,30 +18,31 @@ package applicationsets
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/argoproj/argo-cd/v2/pkg/apiclient"
+	"github.com/argoproj/argo-cd/v2/pkg/apiclient/applicationset"
+	argov1alpha1 "github.com/argoproj/argo-cd/v2/pkg/apis/application/v1alpha1"
+	xpv1 "github.com/crossplane/crossplane-runtime/apis/common/v1"
 	"github.com/crossplane/crossplane-runtime/pkg/event"
 	"github.com/crossplane/crossplane-runtime/pkg/logging"
+	"github.com/google/go-cmp/cmp"
 	"github.com/pkg/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
+	"github.com/crossplane/crossplane-runtime/pkg/meta"
 	"github.com/crossplane/crossplane-runtime/pkg/reconciler/managed"
 	"github.com/crossplane/crossplane-runtime/pkg/resource"
 
 	"github.com/crossplane-contrib/provider-argocd/apis/applicationsets/v1alpha1"
 	"github.com/crossplane-contrib/provider-argocd/pkg/clients"
-	"github.com/crossplane-contrib/provider-argocd/pkg/clients/applications"
+	appsets "github.com/crossplane-contrib/provider-argocd/pkg/clients/applicationsets"
 )
 
 const (
 	errNotApplicationSet = "managed resource is not a ApplicationSet custom resource"
-	errTrackPCUsage      = "cannot track ProviderConfig usage"
-	errGetPC             = "cannot get ProviderConfig"
-	errGetCreds          = "cannot get credentials"
-
-	errNewClient = "cannot create new Service"
+	errGetApplicationSet = "failed to GET ApplicationSet with ArgoCD instance"
 )
 
 // SetupApplicationSet adds a controller that reconciles ApplicationSet managed resources.
@@ -55,7 +56,7 @@ func SetupApplicationSet(mgr ctrl.Manager, l logging.Logger) error {
 		For(&v1alpha1.ApplicationSet{}).
 		Complete(managed.NewReconciler(mgr,
 			resource.ManagedKind(v1alpha1.ApplicationSetGroupVersionKind),
-			managed.WithExternalConnecter(&connector{kube: mgr.GetClient(), newArgocdClientFn: applications.NewApplicationServiceClient}),
+			managed.WithExternalConnecter(&connector{kube: mgr.GetClient(), newArgocdClientFn: appsets.NewApplicationSetServiceClient}),
 			managed.WithReferenceResolver(managed.NewAPISimpleReferenceResolver(mgr.GetClient())),
 			managed.WithInitializers(managed.NewNameAsExternalName(mgr.GetClient())),
 			managed.WithLogger(l.WithValues("controller", name)),
@@ -65,7 +66,7 @@ func SetupApplicationSet(mgr ctrl.Manager, l logging.Logger) error {
 
 type connector struct {
 	kube              client.Client
-	newArgocdClientFn func(clientOpts *apiclient.ClientOptions) applications.ServiceClient
+	newArgocdClientFn func(clientOpts *apiclient.ClientOptions) appsets.ServiceClient
 }
 
 // Connect typically produces an ExternalClient by:
@@ -88,72 +89,106 @@ func (c *connector) Connect(ctx context.Context, mg resource.Managed) (managed.E
 
 type external struct {
 	kube   client.Client
-	client applications.ServiceClient
+	client appsets.ServiceClient
 }
 
-func (c *external) Observe(ctx context.Context, mg resource.Managed) (managed.ExternalObservation, error) {
+func (e *external) Observe(ctx context.Context, mg resource.Managed) (managed.ExternalObservation, error) {
 	cr, ok := mg.(*v1alpha1.ApplicationSet)
 	if !ok {
 		return managed.ExternalObservation{}, errors.New(errNotApplicationSet)
 	}
 
-	// These fmt statements should be removed in the real implementation.
-	fmt.Printf("Observing: %+v", cr)
+	var name = meta.GetExternalName(cr)
+
+	if name == "" {
+		return managed.ExternalObservation{}, nil
+	}
+
+	query := applicationset.ApplicationSetGetQuery{
+		Name: name,
+	}
+
+	var appset *argov1alpha1.ApplicationSet
+
+	appset, err := e.client.Get(ctx, &query)
+
+	if err != nil && appsets.IsNotFound(err) {
+		return managed.ExternalObservation{ResourceExists: false}, nil
+	} else if err != nil {
+		return managed.ExternalObservation{}, errors.Wrap(err, errGetApplicationSet)
+	}
+
+	current := cr.Spec.ForProvider.DeepCopy()
+
+	cr.Status.AtProvider = generateApplicationObservation(appset)
+	cr.Status.SetConditions(xpv1.Available())
 
 	return managed.ExternalObservation{
-		// Return false when the external resource does not exist. This lets
-		// the managed resource reconciler know that it needs to call Create to
-		// (re)create the resource, or that it has successfully been deleted.
-		ResourceExists: true,
-
-		// Return false when the external resource exists, but it not up to date
-		// with the desired managed resource state. This lets the managed
-		// resource reconciler know that it needs to call Update.
-		ResourceUpToDate: true,
-
-		// Return any details that may be required to connect to the external
-		// resource. These will be stored as the connection secret.
-		ConnectionDetails: managed.ConnectionDetails{},
+		ResourceExists:          true,
+		ResourceUpToDate:        IsApplicationSetUpToDate(&cr.Spec.ForProvider, appset),
+		ResourceLateInitialized: !cmp.Equal(current, &cr.Spec.ForProvider),
 	}, nil
 }
 
-func (c *external) Create(ctx context.Context, mg resource.Managed) (managed.ExternalCreation, error) {
+func generateApplicationObservation(appset *argov1alpha1.ApplicationSet) v1alpha1.ArgoApplicationSetStatus {
+	converter := &v1alpha1.ConverterImpl{}
+	return *converter.FromArgoApplicationSetStatus(&appset.Status)
+}
+
+func (e *external) Create(ctx context.Context, mg resource.Managed) (managed.ExternalCreation, error) {
 	cr, ok := mg.(*v1alpha1.ApplicationSet)
 	if !ok {
 		return managed.ExternalCreation{}, errors.New(errNotApplicationSet)
 	}
 
-	fmt.Printf("Creating: %+v", cr)
+	req := e.generateCreateApplicationSetRequest(cr)
 
-	return managed.ExternalCreation{
-		// Optionally return any details that may be required to connect to the
-		// external resource. These will be stored as the connection secret.
-		ConnectionDetails: managed.ConnectionDetails{},
-	}, nil
+	_, err := e.client.Create(ctx, req)
+
+	return managed.ExternalCreation{}, err
 }
 
-func (c *external) Update(ctx context.Context, mg resource.Managed) (managed.ExternalUpdate, error) {
+func (e *external) generateCreateApplicationSetRequest(cr *v1alpha1.ApplicationSet) *applicationset.ApplicationSetCreateRequest {
+	converter := &v1alpha1.ConverterImpl{}
+	targetSpec := converter.ToArgoApplicationSetSpec(&cr.Spec.ForProvider)
+
+	req := &applicationset.ApplicationSetCreateRequest{
+		Applicationset: &argov1alpha1.ApplicationSet{
+			ObjectMeta: metav1.ObjectMeta{
+				Name: meta.GetExternalName(cr),
+			},
+			Spec: *targetSpec,
+		},
+	}
+	return req
+}
+
+func (e *external) Update(ctx context.Context, mg resource.Managed) (managed.ExternalUpdate, error) {
 	cr, ok := mg.(*v1alpha1.ApplicationSet)
 	if !ok {
 		return managed.ExternalUpdate{}, errors.New(errNotApplicationSet)
 	}
 
-	fmt.Printf("Updating: %+v", cr)
+	req := e.generateCreateApplicationSetRequest(cr)
+	req.Upsert = true
 
-	return managed.ExternalUpdate{
-		// Optionally return any details that may be required to connect to the
-		// external resource. These will be stored as the connection secret.
-		ConnectionDetails: managed.ConnectionDetails{},
-	}, nil
+	_, err := e.client.Create(ctx, req)
+
+	return managed.ExternalUpdate{}, err
 }
 
-func (c *external) Delete(ctx context.Context, mg resource.Managed) error {
+func (e *external) Delete(ctx context.Context, mg resource.Managed) error {
 	cr, ok := mg.(*v1alpha1.ApplicationSet)
 	if !ok {
 		return errors.New(errNotApplicationSet)
 	}
 
-	fmt.Printf("Deleting: %+v", cr)
+	_, err := e.client.Delete(ctx, &applicationset.ApplicationSetDeleteRequest{
+		Name: meta.GetExternalName(cr),
+	})
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
