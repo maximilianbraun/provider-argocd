@@ -38,6 +38,26 @@ func (mg *ApplicationSet) ResolveReferences(ctx context.Context, c client.Reader
 		}
 	}
 	for i3 := 0; i3 < len(mg.Spec.ForProvider.Generators); i3++ {
+		if mg.Spec.ForProvider.Generators[i3].List != nil {
+			rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+				CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Generators[i3].List.Template.Spec.Destination.Name),
+				Extract:      v1alpha1.ServerName(),
+				Reference:    mg.Spec.ForProvider.Generators[i3].List.Template.Spec.Destination.NameRef,
+				Selector:     mg.Spec.ForProvider.Generators[i3].List.Template.Spec.Destination.NameSelector,
+				To: reference.To{
+					List:    &v1alpha1.ClusterList{},
+					Managed: &v1alpha1.Cluster{},
+				},
+			})
+			if err != nil {
+				return errors.Wrap(err, "mg.Spec.ForProvider.Generators[i3].List.Template.Spec.Destination.Name")
+			}
+			mg.Spec.ForProvider.Generators[i3].List.Template.Spec.Destination.Name = reference.ToPtrValue(rsp.ResolvedValue)
+			mg.Spec.ForProvider.Generators[i3].List.Template.Spec.Destination.NameRef = rsp.ResolvedReference
+
+		}
+	}
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.Generators); i3++ {
 		if mg.Spec.ForProvider.Generators[i3].Clusters != nil {
 			rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
 				CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Generators[i3].Clusters.Template.Spec.Destination.Server),
@@ -54,6 +74,26 @@ func (mg *ApplicationSet) ResolveReferences(ctx context.Context, c client.Reader
 			}
 			mg.Spec.ForProvider.Generators[i3].Clusters.Template.Spec.Destination.Server = reference.ToPtrValue(rsp.ResolvedValue)
 			mg.Spec.ForProvider.Generators[i3].Clusters.Template.Spec.Destination.ServerRef = rsp.ResolvedReference
+
+		}
+	}
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.Generators); i3++ {
+		if mg.Spec.ForProvider.Generators[i3].Clusters != nil {
+			rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+				CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Generators[i3].Clusters.Template.Spec.Destination.Name),
+				Extract:      v1alpha1.ServerName(),
+				Reference:    mg.Spec.ForProvider.Generators[i3].Clusters.Template.Spec.Destination.NameRef,
+				Selector:     mg.Spec.ForProvider.Generators[i3].Clusters.Template.Spec.Destination.NameSelector,
+				To: reference.To{
+					List:    &v1alpha1.ClusterList{},
+					Managed: &v1alpha1.Cluster{},
+				},
+			})
+			if err != nil {
+				return errors.Wrap(err, "mg.Spec.ForProvider.Generators[i3].Clusters.Template.Spec.Destination.Name")
+			}
+			mg.Spec.ForProvider.Generators[i3].Clusters.Template.Spec.Destination.Name = reference.ToPtrValue(rsp.ResolvedValue)
+			mg.Spec.ForProvider.Generators[i3].Clusters.Template.Spec.Destination.NameRef = rsp.ResolvedReference
 
 		}
 	}
@@ -78,6 +118,26 @@ func (mg *ApplicationSet) ResolveReferences(ctx context.Context, c client.Reader
 		}
 	}
 	for i3 := 0; i3 < len(mg.Spec.ForProvider.Generators); i3++ {
+		if mg.Spec.ForProvider.Generators[i3].Git != nil {
+			rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+				CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Generators[i3].Git.Template.Spec.Destination.Name),
+				Extract:      v1alpha1.ServerName(),
+				Reference:    mg.Spec.ForProvider.Generators[i3].Git.Template.Spec.Destination.NameRef,
+				Selector:     mg.Spec.ForProvider.Generators[i3].Git.Template.Spec.Destination.NameSelector,
+				To: reference.To{
+					List:    &v1alpha1.ClusterList{},
+					Managed: &v1alpha1.Cluster{},
+				},
+			})
+			if err != nil {
+				return errors.Wrap(err, "mg.Spec.ForProvider.Generators[i3].Git.Template.Spec.Destination.Name")
+			}
+			mg.Spec.ForProvider.Generators[i3].Git.Template.Spec.Destination.Name = reference.ToPtrValue(rsp.ResolvedValue)
+			mg.Spec.ForProvider.Generators[i3].Git.Template.Spec.Destination.NameRef = rsp.ResolvedReference
+
+		}
+	}
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.Generators); i3++ {
 		if mg.Spec.ForProvider.Generators[i3].SCMProvider != nil {
 			rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
 				CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Generators[i3].SCMProvider.Template.Spec.Destination.Server),
@@ -94,6 +154,26 @@ func (mg *ApplicationSet) ResolveReferences(ctx context.Context, c client.Reader
 			}
 			mg.Spec.ForProvider.Generators[i3].SCMProvider.Template.Spec.Destination.Server = reference.ToPtrValue(rsp.ResolvedValue)
 			mg.Spec.ForProvider.Generators[i3].SCMProvider.Template.Spec.Destination.ServerRef = rsp.ResolvedReference
+
+		}
+	}
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.Generators); i3++ {
+		if mg.Spec.ForProvider.Generators[i3].SCMProvider != nil {
+			rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+				CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Generators[i3].SCMProvider.Template.Spec.Destination.Name),
+				Extract:      v1alpha1.ServerName(),
+				Reference:    mg.Spec.ForProvider.Generators[i3].SCMProvider.Template.Spec.Destination.NameRef,
+				Selector:     mg.Spec.ForProvider.Generators[i3].SCMProvider.Template.Spec.Destination.NameSelector,
+				To: reference.To{
+					List:    &v1alpha1.ClusterList{},
+					Managed: &v1alpha1.Cluster{},
+				},
+			})
+			if err != nil {
+				return errors.Wrap(err, "mg.Spec.ForProvider.Generators[i3].SCMProvider.Template.Spec.Destination.Name")
+			}
+			mg.Spec.ForProvider.Generators[i3].SCMProvider.Template.Spec.Destination.Name = reference.ToPtrValue(rsp.ResolvedValue)
+			mg.Spec.ForProvider.Generators[i3].SCMProvider.Template.Spec.Destination.NameRef = rsp.ResolvedReference
 
 		}
 	}
@@ -118,6 +198,26 @@ func (mg *ApplicationSet) ResolveReferences(ctx context.Context, c client.Reader
 		}
 	}
 	for i3 := 0; i3 < len(mg.Spec.ForProvider.Generators); i3++ {
+		if mg.Spec.ForProvider.Generators[i3].ClusterDecisionResource != nil {
+			rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+				CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Generators[i3].ClusterDecisionResource.Template.Spec.Destination.Name),
+				Extract:      v1alpha1.ServerName(),
+				Reference:    mg.Spec.ForProvider.Generators[i3].ClusterDecisionResource.Template.Spec.Destination.NameRef,
+				Selector:     mg.Spec.ForProvider.Generators[i3].ClusterDecisionResource.Template.Spec.Destination.NameSelector,
+				To: reference.To{
+					List:    &v1alpha1.ClusterList{},
+					Managed: &v1alpha1.Cluster{},
+				},
+			})
+			if err != nil {
+				return errors.Wrap(err, "mg.Spec.ForProvider.Generators[i3].ClusterDecisionResource.Template.Spec.Destination.Name")
+			}
+			mg.Spec.ForProvider.Generators[i3].ClusterDecisionResource.Template.Spec.Destination.Name = reference.ToPtrValue(rsp.ResolvedValue)
+			mg.Spec.ForProvider.Generators[i3].ClusterDecisionResource.Template.Spec.Destination.NameRef = rsp.ResolvedReference
+
+		}
+	}
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.Generators); i3++ {
 		if mg.Spec.ForProvider.Generators[i3].PullRequest != nil {
 			rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
 				CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Generators[i3].PullRequest.Template.Spec.Destination.Server),
@@ -134,6 +234,26 @@ func (mg *ApplicationSet) ResolveReferences(ctx context.Context, c client.Reader
 			}
 			mg.Spec.ForProvider.Generators[i3].PullRequest.Template.Spec.Destination.Server = reference.ToPtrValue(rsp.ResolvedValue)
 			mg.Spec.ForProvider.Generators[i3].PullRequest.Template.Spec.Destination.ServerRef = rsp.ResolvedReference
+
+		}
+	}
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.Generators); i3++ {
+		if mg.Spec.ForProvider.Generators[i3].PullRequest != nil {
+			rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+				CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Generators[i3].PullRequest.Template.Spec.Destination.Name),
+				Extract:      v1alpha1.ServerName(),
+				Reference:    mg.Spec.ForProvider.Generators[i3].PullRequest.Template.Spec.Destination.NameRef,
+				Selector:     mg.Spec.ForProvider.Generators[i3].PullRequest.Template.Spec.Destination.NameSelector,
+				To: reference.To{
+					List:    &v1alpha1.ClusterList{},
+					Managed: &v1alpha1.Cluster{},
+				},
+			})
+			if err != nil {
+				return errors.Wrap(err, "mg.Spec.ForProvider.Generators[i3].PullRequest.Template.Spec.Destination.Name")
+			}
+			mg.Spec.ForProvider.Generators[i3].PullRequest.Template.Spec.Destination.Name = reference.ToPtrValue(rsp.ResolvedValue)
+			mg.Spec.ForProvider.Generators[i3].PullRequest.Template.Spec.Destination.NameRef = rsp.ResolvedReference
 
 		}
 	}
@@ -156,6 +276,30 @@ func (mg *ApplicationSet) ResolveReferences(ctx context.Context, c client.Reader
 					}
 					mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].List.Template.Spec.Destination.Server = reference.ToPtrValue(rsp.ResolvedValue)
 					mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].List.Template.Spec.Destination.ServerRef = rsp.ResolvedReference
+
+				}
+			}
+		}
+	}
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.Generators); i3++ {
+		if mg.Spec.ForProvider.Generators[i3].Matrix != nil {
+			for i5 := 0; i5 < len(mg.Spec.ForProvider.Generators[i3].Matrix.Generators); i5++ {
+				if mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].List != nil {
+					rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+						CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].List.Template.Spec.Destination.Name),
+						Extract:      v1alpha1.ServerName(),
+						Reference:    mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].List.Template.Spec.Destination.NameRef,
+						Selector:     mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].List.Template.Spec.Destination.NameSelector,
+						To: reference.To{
+							List:    &v1alpha1.ClusterList{},
+							Managed: &v1alpha1.Cluster{},
+						},
+					})
+					if err != nil {
+						return errors.Wrap(err, "mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].List.Template.Spec.Destination.Name")
+					}
+					mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].List.Template.Spec.Destination.Name = reference.ToPtrValue(rsp.ResolvedValue)
+					mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].List.Template.Spec.Destination.NameRef = rsp.ResolvedReference
 
 				}
 			}
@@ -188,6 +332,30 @@ func (mg *ApplicationSet) ResolveReferences(ctx context.Context, c client.Reader
 	for i3 := 0; i3 < len(mg.Spec.ForProvider.Generators); i3++ {
 		if mg.Spec.ForProvider.Generators[i3].Matrix != nil {
 			for i5 := 0; i5 < len(mg.Spec.ForProvider.Generators[i3].Matrix.Generators); i5++ {
+				if mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].Clusters != nil {
+					rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+						CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].Clusters.Template.Spec.Destination.Name),
+						Extract:      v1alpha1.ServerName(),
+						Reference:    mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].Clusters.Template.Spec.Destination.NameRef,
+						Selector:     mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].Clusters.Template.Spec.Destination.NameSelector,
+						To: reference.To{
+							List:    &v1alpha1.ClusterList{},
+							Managed: &v1alpha1.Cluster{},
+						},
+					})
+					if err != nil {
+						return errors.Wrap(err, "mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].Clusters.Template.Spec.Destination.Name")
+					}
+					mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].Clusters.Template.Spec.Destination.Name = reference.ToPtrValue(rsp.ResolvedValue)
+					mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].Clusters.Template.Spec.Destination.NameRef = rsp.ResolvedReference
+
+				}
+			}
+		}
+	}
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.Generators); i3++ {
+		if mg.Spec.ForProvider.Generators[i3].Matrix != nil {
+			for i5 := 0; i5 < len(mg.Spec.ForProvider.Generators[i3].Matrix.Generators); i5++ {
 				if mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].Git != nil {
 					rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
 						CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].Git.Template.Spec.Destination.Server),
@@ -204,6 +372,30 @@ func (mg *ApplicationSet) ResolveReferences(ctx context.Context, c client.Reader
 					}
 					mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].Git.Template.Spec.Destination.Server = reference.ToPtrValue(rsp.ResolvedValue)
 					mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].Git.Template.Spec.Destination.ServerRef = rsp.ResolvedReference
+
+				}
+			}
+		}
+	}
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.Generators); i3++ {
+		if mg.Spec.ForProvider.Generators[i3].Matrix != nil {
+			for i5 := 0; i5 < len(mg.Spec.ForProvider.Generators[i3].Matrix.Generators); i5++ {
+				if mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].Git != nil {
+					rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+						CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].Git.Template.Spec.Destination.Name),
+						Extract:      v1alpha1.ServerName(),
+						Reference:    mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].Git.Template.Spec.Destination.NameRef,
+						Selector:     mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].Git.Template.Spec.Destination.NameSelector,
+						To: reference.To{
+							List:    &v1alpha1.ClusterList{},
+							Managed: &v1alpha1.Cluster{},
+						},
+					})
+					if err != nil {
+						return errors.Wrap(err, "mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].Git.Template.Spec.Destination.Name")
+					}
+					mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].Git.Template.Spec.Destination.Name = reference.ToPtrValue(rsp.ResolvedValue)
+					mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].Git.Template.Spec.Destination.NameRef = rsp.ResolvedReference
 
 				}
 			}
@@ -236,6 +428,30 @@ func (mg *ApplicationSet) ResolveReferences(ctx context.Context, c client.Reader
 	for i3 := 0; i3 < len(mg.Spec.ForProvider.Generators); i3++ {
 		if mg.Spec.ForProvider.Generators[i3].Matrix != nil {
 			for i5 := 0; i5 < len(mg.Spec.ForProvider.Generators[i3].Matrix.Generators); i5++ {
+				if mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].SCMProvider != nil {
+					rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+						CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].SCMProvider.Template.Spec.Destination.Name),
+						Extract:      v1alpha1.ServerName(),
+						Reference:    mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].SCMProvider.Template.Spec.Destination.NameRef,
+						Selector:     mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].SCMProvider.Template.Spec.Destination.NameSelector,
+						To: reference.To{
+							List:    &v1alpha1.ClusterList{},
+							Managed: &v1alpha1.Cluster{},
+						},
+					})
+					if err != nil {
+						return errors.Wrap(err, "mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].SCMProvider.Template.Spec.Destination.Name")
+					}
+					mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].SCMProvider.Template.Spec.Destination.Name = reference.ToPtrValue(rsp.ResolvedValue)
+					mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].SCMProvider.Template.Spec.Destination.NameRef = rsp.ResolvedReference
+
+				}
+			}
+		}
+	}
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.Generators); i3++ {
+		if mg.Spec.ForProvider.Generators[i3].Matrix != nil {
+			for i5 := 0; i5 < len(mg.Spec.ForProvider.Generators[i3].Matrix.Generators); i5++ {
 				if mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].ClusterDecisionResource != nil {
 					rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
 						CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].ClusterDecisionResource.Template.Spec.Destination.Server),
@@ -252,6 +468,30 @@ func (mg *ApplicationSet) ResolveReferences(ctx context.Context, c client.Reader
 					}
 					mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].ClusterDecisionResource.Template.Spec.Destination.Server = reference.ToPtrValue(rsp.ResolvedValue)
 					mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].ClusterDecisionResource.Template.Spec.Destination.ServerRef = rsp.ResolvedReference
+
+				}
+			}
+		}
+	}
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.Generators); i3++ {
+		if mg.Spec.ForProvider.Generators[i3].Matrix != nil {
+			for i5 := 0; i5 < len(mg.Spec.ForProvider.Generators[i3].Matrix.Generators); i5++ {
+				if mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].ClusterDecisionResource != nil {
+					rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+						CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].ClusterDecisionResource.Template.Spec.Destination.Name),
+						Extract:      v1alpha1.ServerName(),
+						Reference:    mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].ClusterDecisionResource.Template.Spec.Destination.NameRef,
+						Selector:     mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].ClusterDecisionResource.Template.Spec.Destination.NameSelector,
+						To: reference.To{
+							List:    &v1alpha1.ClusterList{},
+							Managed: &v1alpha1.Cluster{},
+						},
+					})
+					if err != nil {
+						return errors.Wrap(err, "mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].ClusterDecisionResource.Template.Spec.Destination.Name")
+					}
+					mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].ClusterDecisionResource.Template.Spec.Destination.Name = reference.ToPtrValue(rsp.ResolvedValue)
+					mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].ClusterDecisionResource.Template.Spec.Destination.NameRef = rsp.ResolvedReference
 
 				}
 			}
@@ -284,6 +524,30 @@ func (mg *ApplicationSet) ResolveReferences(ctx context.Context, c client.Reader
 	for i3 := 0; i3 < len(mg.Spec.ForProvider.Generators); i3++ {
 		if mg.Spec.ForProvider.Generators[i3].Matrix != nil {
 			for i5 := 0; i5 < len(mg.Spec.ForProvider.Generators[i3].Matrix.Generators); i5++ {
+				if mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].PullRequest != nil {
+					rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+						CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].PullRequest.Template.Spec.Destination.Name),
+						Extract:      v1alpha1.ServerName(),
+						Reference:    mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].PullRequest.Template.Spec.Destination.NameRef,
+						Selector:     mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].PullRequest.Template.Spec.Destination.NameSelector,
+						To: reference.To{
+							List:    &v1alpha1.ClusterList{},
+							Managed: &v1alpha1.Cluster{},
+						},
+					})
+					if err != nil {
+						return errors.Wrap(err, "mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].PullRequest.Template.Spec.Destination.Name")
+					}
+					mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].PullRequest.Template.Spec.Destination.Name = reference.ToPtrValue(rsp.ResolvedValue)
+					mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].PullRequest.Template.Spec.Destination.NameRef = rsp.ResolvedReference
+
+				}
+			}
+		}
+	}
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.Generators); i3++ {
+		if mg.Spec.ForProvider.Generators[i3].Matrix != nil {
+			for i5 := 0; i5 < len(mg.Spec.ForProvider.Generators[i3].Matrix.Generators); i5++ {
 				if mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].Plugin != nil {
 					rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
 						CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].Plugin.Template.Spec.Destination.Server),
@@ -300,6 +564,30 @@ func (mg *ApplicationSet) ResolveReferences(ctx context.Context, c client.Reader
 					}
 					mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].Plugin.Template.Spec.Destination.Server = reference.ToPtrValue(rsp.ResolvedValue)
 					mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].Plugin.Template.Spec.Destination.ServerRef = rsp.ResolvedReference
+
+				}
+			}
+		}
+	}
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.Generators); i3++ {
+		if mg.Spec.ForProvider.Generators[i3].Matrix != nil {
+			for i5 := 0; i5 < len(mg.Spec.ForProvider.Generators[i3].Matrix.Generators); i5++ {
+				if mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].Plugin != nil {
+					rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+						CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].Plugin.Template.Spec.Destination.Name),
+						Extract:      v1alpha1.ServerName(),
+						Reference:    mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].Plugin.Template.Spec.Destination.NameRef,
+						Selector:     mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].Plugin.Template.Spec.Destination.NameSelector,
+						To: reference.To{
+							List:    &v1alpha1.ClusterList{},
+							Managed: &v1alpha1.Cluster{},
+						},
+					})
+					if err != nil {
+						return errors.Wrap(err, "mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].Plugin.Template.Spec.Destination.Name")
+					}
+					mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].Plugin.Template.Spec.Destination.Name = reference.ToPtrValue(rsp.ResolvedValue)
+					mg.Spec.ForProvider.Generators[i3].Matrix.Generators[i5].Plugin.Template.Spec.Destination.NameRef = rsp.ResolvedReference
 
 				}
 			}
@@ -326,6 +614,26 @@ func (mg *ApplicationSet) ResolveReferences(ctx context.Context, c client.Reader
 		}
 	}
 	for i3 := 0; i3 < len(mg.Spec.ForProvider.Generators); i3++ {
+		if mg.Spec.ForProvider.Generators[i3].Matrix != nil {
+			rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+				CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Generators[i3].Matrix.Template.Spec.Destination.Name),
+				Extract:      v1alpha1.ServerName(),
+				Reference:    mg.Spec.ForProvider.Generators[i3].Matrix.Template.Spec.Destination.NameRef,
+				Selector:     mg.Spec.ForProvider.Generators[i3].Matrix.Template.Spec.Destination.NameSelector,
+				To: reference.To{
+					List:    &v1alpha1.ClusterList{},
+					Managed: &v1alpha1.Cluster{},
+				},
+			})
+			if err != nil {
+				return errors.Wrap(err, "mg.Spec.ForProvider.Generators[i3].Matrix.Template.Spec.Destination.Name")
+			}
+			mg.Spec.ForProvider.Generators[i3].Matrix.Template.Spec.Destination.Name = reference.ToPtrValue(rsp.ResolvedValue)
+			mg.Spec.ForProvider.Generators[i3].Matrix.Template.Spec.Destination.NameRef = rsp.ResolvedReference
+
+		}
+	}
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.Generators); i3++ {
 		if mg.Spec.ForProvider.Generators[i3].Merge != nil {
 			for i5 := 0; i5 < len(mg.Spec.ForProvider.Generators[i3].Merge.Generators); i5++ {
 				if mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].List != nil {
@@ -344,6 +652,30 @@ func (mg *ApplicationSet) ResolveReferences(ctx context.Context, c client.Reader
 					}
 					mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].List.Template.Spec.Destination.Server = reference.ToPtrValue(rsp.ResolvedValue)
 					mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].List.Template.Spec.Destination.ServerRef = rsp.ResolvedReference
+
+				}
+			}
+		}
+	}
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.Generators); i3++ {
+		if mg.Spec.ForProvider.Generators[i3].Merge != nil {
+			for i5 := 0; i5 < len(mg.Spec.ForProvider.Generators[i3].Merge.Generators); i5++ {
+				if mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].List != nil {
+					rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+						CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].List.Template.Spec.Destination.Name),
+						Extract:      v1alpha1.ServerName(),
+						Reference:    mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].List.Template.Spec.Destination.NameRef,
+						Selector:     mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].List.Template.Spec.Destination.NameSelector,
+						To: reference.To{
+							List:    &v1alpha1.ClusterList{},
+							Managed: &v1alpha1.Cluster{},
+						},
+					})
+					if err != nil {
+						return errors.Wrap(err, "mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].List.Template.Spec.Destination.Name")
+					}
+					mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].List.Template.Spec.Destination.Name = reference.ToPtrValue(rsp.ResolvedValue)
+					mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].List.Template.Spec.Destination.NameRef = rsp.ResolvedReference
 
 				}
 			}
@@ -376,6 +708,30 @@ func (mg *ApplicationSet) ResolveReferences(ctx context.Context, c client.Reader
 	for i3 := 0; i3 < len(mg.Spec.ForProvider.Generators); i3++ {
 		if mg.Spec.ForProvider.Generators[i3].Merge != nil {
 			for i5 := 0; i5 < len(mg.Spec.ForProvider.Generators[i3].Merge.Generators); i5++ {
+				if mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].Clusters != nil {
+					rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+						CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].Clusters.Template.Spec.Destination.Name),
+						Extract:      v1alpha1.ServerName(),
+						Reference:    mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].Clusters.Template.Spec.Destination.NameRef,
+						Selector:     mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].Clusters.Template.Spec.Destination.NameSelector,
+						To: reference.To{
+							List:    &v1alpha1.ClusterList{},
+							Managed: &v1alpha1.Cluster{},
+						},
+					})
+					if err != nil {
+						return errors.Wrap(err, "mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].Clusters.Template.Spec.Destination.Name")
+					}
+					mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].Clusters.Template.Spec.Destination.Name = reference.ToPtrValue(rsp.ResolvedValue)
+					mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].Clusters.Template.Spec.Destination.NameRef = rsp.ResolvedReference
+
+				}
+			}
+		}
+	}
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.Generators); i3++ {
+		if mg.Spec.ForProvider.Generators[i3].Merge != nil {
+			for i5 := 0; i5 < len(mg.Spec.ForProvider.Generators[i3].Merge.Generators); i5++ {
 				if mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].Git != nil {
 					rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
 						CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].Git.Template.Spec.Destination.Server),
@@ -392,6 +748,30 @@ func (mg *ApplicationSet) ResolveReferences(ctx context.Context, c client.Reader
 					}
 					mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].Git.Template.Spec.Destination.Server = reference.ToPtrValue(rsp.ResolvedValue)
 					mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].Git.Template.Spec.Destination.ServerRef = rsp.ResolvedReference
+
+				}
+			}
+		}
+	}
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.Generators); i3++ {
+		if mg.Spec.ForProvider.Generators[i3].Merge != nil {
+			for i5 := 0; i5 < len(mg.Spec.ForProvider.Generators[i3].Merge.Generators); i5++ {
+				if mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].Git != nil {
+					rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+						CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].Git.Template.Spec.Destination.Name),
+						Extract:      v1alpha1.ServerName(),
+						Reference:    mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].Git.Template.Spec.Destination.NameRef,
+						Selector:     mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].Git.Template.Spec.Destination.NameSelector,
+						To: reference.To{
+							List:    &v1alpha1.ClusterList{},
+							Managed: &v1alpha1.Cluster{},
+						},
+					})
+					if err != nil {
+						return errors.Wrap(err, "mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].Git.Template.Spec.Destination.Name")
+					}
+					mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].Git.Template.Spec.Destination.Name = reference.ToPtrValue(rsp.ResolvedValue)
+					mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].Git.Template.Spec.Destination.NameRef = rsp.ResolvedReference
 
 				}
 			}
@@ -424,6 +804,30 @@ func (mg *ApplicationSet) ResolveReferences(ctx context.Context, c client.Reader
 	for i3 := 0; i3 < len(mg.Spec.ForProvider.Generators); i3++ {
 		if mg.Spec.ForProvider.Generators[i3].Merge != nil {
 			for i5 := 0; i5 < len(mg.Spec.ForProvider.Generators[i3].Merge.Generators); i5++ {
+				if mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].SCMProvider != nil {
+					rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+						CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].SCMProvider.Template.Spec.Destination.Name),
+						Extract:      v1alpha1.ServerName(),
+						Reference:    mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].SCMProvider.Template.Spec.Destination.NameRef,
+						Selector:     mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].SCMProvider.Template.Spec.Destination.NameSelector,
+						To: reference.To{
+							List:    &v1alpha1.ClusterList{},
+							Managed: &v1alpha1.Cluster{},
+						},
+					})
+					if err != nil {
+						return errors.Wrap(err, "mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].SCMProvider.Template.Spec.Destination.Name")
+					}
+					mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].SCMProvider.Template.Spec.Destination.Name = reference.ToPtrValue(rsp.ResolvedValue)
+					mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].SCMProvider.Template.Spec.Destination.NameRef = rsp.ResolvedReference
+
+				}
+			}
+		}
+	}
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.Generators); i3++ {
+		if mg.Spec.ForProvider.Generators[i3].Merge != nil {
+			for i5 := 0; i5 < len(mg.Spec.ForProvider.Generators[i3].Merge.Generators); i5++ {
 				if mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].ClusterDecisionResource != nil {
 					rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
 						CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].ClusterDecisionResource.Template.Spec.Destination.Server),
@@ -440,6 +844,30 @@ func (mg *ApplicationSet) ResolveReferences(ctx context.Context, c client.Reader
 					}
 					mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].ClusterDecisionResource.Template.Spec.Destination.Server = reference.ToPtrValue(rsp.ResolvedValue)
 					mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].ClusterDecisionResource.Template.Spec.Destination.ServerRef = rsp.ResolvedReference
+
+				}
+			}
+		}
+	}
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.Generators); i3++ {
+		if mg.Spec.ForProvider.Generators[i3].Merge != nil {
+			for i5 := 0; i5 < len(mg.Spec.ForProvider.Generators[i3].Merge.Generators); i5++ {
+				if mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].ClusterDecisionResource != nil {
+					rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+						CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].ClusterDecisionResource.Template.Spec.Destination.Name),
+						Extract:      v1alpha1.ServerName(),
+						Reference:    mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].ClusterDecisionResource.Template.Spec.Destination.NameRef,
+						Selector:     mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].ClusterDecisionResource.Template.Spec.Destination.NameSelector,
+						To: reference.To{
+							List:    &v1alpha1.ClusterList{},
+							Managed: &v1alpha1.Cluster{},
+						},
+					})
+					if err != nil {
+						return errors.Wrap(err, "mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].ClusterDecisionResource.Template.Spec.Destination.Name")
+					}
+					mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].ClusterDecisionResource.Template.Spec.Destination.Name = reference.ToPtrValue(rsp.ResolvedValue)
+					mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].ClusterDecisionResource.Template.Spec.Destination.NameRef = rsp.ResolvedReference
 
 				}
 			}
@@ -472,6 +900,30 @@ func (mg *ApplicationSet) ResolveReferences(ctx context.Context, c client.Reader
 	for i3 := 0; i3 < len(mg.Spec.ForProvider.Generators); i3++ {
 		if mg.Spec.ForProvider.Generators[i3].Merge != nil {
 			for i5 := 0; i5 < len(mg.Spec.ForProvider.Generators[i3].Merge.Generators); i5++ {
+				if mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].PullRequest != nil {
+					rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+						CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].PullRequest.Template.Spec.Destination.Name),
+						Extract:      v1alpha1.ServerName(),
+						Reference:    mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].PullRequest.Template.Spec.Destination.NameRef,
+						Selector:     mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].PullRequest.Template.Spec.Destination.NameSelector,
+						To: reference.To{
+							List:    &v1alpha1.ClusterList{},
+							Managed: &v1alpha1.Cluster{},
+						},
+					})
+					if err != nil {
+						return errors.Wrap(err, "mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].PullRequest.Template.Spec.Destination.Name")
+					}
+					mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].PullRequest.Template.Spec.Destination.Name = reference.ToPtrValue(rsp.ResolvedValue)
+					mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].PullRequest.Template.Spec.Destination.NameRef = rsp.ResolvedReference
+
+				}
+			}
+		}
+	}
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.Generators); i3++ {
+		if mg.Spec.ForProvider.Generators[i3].Merge != nil {
+			for i5 := 0; i5 < len(mg.Spec.ForProvider.Generators[i3].Merge.Generators); i5++ {
 				if mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].Plugin != nil {
 					rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
 						CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].Plugin.Template.Spec.Destination.Server),
@@ -488,6 +940,30 @@ func (mg *ApplicationSet) ResolveReferences(ctx context.Context, c client.Reader
 					}
 					mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].Plugin.Template.Spec.Destination.Server = reference.ToPtrValue(rsp.ResolvedValue)
 					mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].Plugin.Template.Spec.Destination.ServerRef = rsp.ResolvedReference
+
+				}
+			}
+		}
+	}
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.Generators); i3++ {
+		if mg.Spec.ForProvider.Generators[i3].Merge != nil {
+			for i5 := 0; i5 < len(mg.Spec.ForProvider.Generators[i3].Merge.Generators); i5++ {
+				if mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].Plugin != nil {
+					rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+						CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].Plugin.Template.Spec.Destination.Name),
+						Extract:      v1alpha1.ServerName(),
+						Reference:    mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].Plugin.Template.Spec.Destination.NameRef,
+						Selector:     mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].Plugin.Template.Spec.Destination.NameSelector,
+						To: reference.To{
+							List:    &v1alpha1.ClusterList{},
+							Managed: &v1alpha1.Cluster{},
+						},
+					})
+					if err != nil {
+						return errors.Wrap(err, "mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].Plugin.Template.Spec.Destination.Name")
+					}
+					mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].Plugin.Template.Spec.Destination.Name = reference.ToPtrValue(rsp.ResolvedValue)
+					mg.Spec.ForProvider.Generators[i3].Merge.Generators[i5].Plugin.Template.Spec.Destination.NameRef = rsp.ResolvedReference
 
 				}
 			}
@@ -514,6 +990,26 @@ func (mg *ApplicationSet) ResolveReferences(ctx context.Context, c client.Reader
 		}
 	}
 	for i3 := 0; i3 < len(mg.Spec.ForProvider.Generators); i3++ {
+		if mg.Spec.ForProvider.Generators[i3].Merge != nil {
+			rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+				CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Generators[i3].Merge.Template.Spec.Destination.Name),
+				Extract:      v1alpha1.ServerName(),
+				Reference:    mg.Spec.ForProvider.Generators[i3].Merge.Template.Spec.Destination.NameRef,
+				Selector:     mg.Spec.ForProvider.Generators[i3].Merge.Template.Spec.Destination.NameSelector,
+				To: reference.To{
+					List:    &v1alpha1.ClusterList{},
+					Managed: &v1alpha1.Cluster{},
+				},
+			})
+			if err != nil {
+				return errors.Wrap(err, "mg.Spec.ForProvider.Generators[i3].Merge.Template.Spec.Destination.Name")
+			}
+			mg.Spec.ForProvider.Generators[i3].Merge.Template.Spec.Destination.Name = reference.ToPtrValue(rsp.ResolvedValue)
+			mg.Spec.ForProvider.Generators[i3].Merge.Template.Spec.Destination.NameRef = rsp.ResolvedReference
+
+		}
+	}
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.Generators); i3++ {
 		if mg.Spec.ForProvider.Generators[i3].Plugin != nil {
 			rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
 				CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Generators[i3].Plugin.Template.Spec.Destination.Server),
@@ -533,6 +1029,26 @@ func (mg *ApplicationSet) ResolveReferences(ctx context.Context, c client.Reader
 
 		}
 	}
+	for i3 := 0; i3 < len(mg.Spec.ForProvider.Generators); i3++ {
+		if mg.Spec.ForProvider.Generators[i3].Plugin != nil {
+			rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+				CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Generators[i3].Plugin.Template.Spec.Destination.Name),
+				Extract:      v1alpha1.ServerName(),
+				Reference:    mg.Spec.ForProvider.Generators[i3].Plugin.Template.Spec.Destination.NameRef,
+				Selector:     mg.Spec.ForProvider.Generators[i3].Plugin.Template.Spec.Destination.NameSelector,
+				To: reference.To{
+					List:    &v1alpha1.ClusterList{},
+					Managed: &v1alpha1.Cluster{},
+				},
+			})
+			if err != nil {
+				return errors.Wrap(err, "mg.Spec.ForProvider.Generators[i3].Plugin.Template.Spec.Destination.Name")
+			}
+			mg.Spec.ForProvider.Generators[i3].Plugin.Template.Spec.Destination.Name = reference.ToPtrValue(rsp.ResolvedValue)
+			mg.Spec.ForProvider.Generators[i3].Plugin.Template.Spec.Destination.NameRef = rsp.ResolvedReference
+
+		}
+	}
 	rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
 		CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Template.Spec.Destination.Server),
 		Extract:      reference.ExternalName(),
@@ -548,6 +1064,22 @@ func (mg *ApplicationSet) ResolveReferences(ctx context.Context, c client.Reader
 	}
 	mg.Spec.ForProvider.Template.Spec.Destination.Server = reference.ToPtrValue(rsp.ResolvedValue)
 	mg.Spec.ForProvider.Template.Spec.Destination.ServerRef = rsp.ResolvedReference
+
+	rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
+		CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.Template.Spec.Destination.Name),
+		Extract:      v1alpha1.ServerName(),
+		Reference:    mg.Spec.ForProvider.Template.Spec.Destination.NameRef,
+		Selector:     mg.Spec.ForProvider.Template.Spec.Destination.NameSelector,
+		To: reference.To{
+			List:    &v1alpha1.ClusterList{},
+			Managed: &v1alpha1.Cluster{},
+		},
+	})
+	if err != nil {
+		return errors.Wrap(err, "mg.Spec.ForProvider.Template.Spec.Destination.Name")
+	}
+	mg.Spec.ForProvider.Template.Spec.Destination.Name = reference.ToPtrValue(rsp.ResolvedValue)
+	mg.Spec.ForProvider.Template.Spec.Destination.NameRef = rsp.ResolvedReference
 
 	return nil
 }

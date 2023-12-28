@@ -20,6 +20,8 @@ type Converter interface {
 
 	// goverter:ignore ServerRef
 	// goverter:ignore ServerSelector
+	// goverter:ignore NameRef
+	// goverter:ignore NameSelector
 	FromArgoDestination(in argocdv1alpha1.ApplicationDestination) ApplicationDestination
 
 	ToArgoDestination(in ApplicationDestination) argocdv1alpha1.ApplicationDestination

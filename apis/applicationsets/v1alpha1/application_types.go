@@ -115,8 +115,18 @@ type ApplicationDestination struct {
 	// +optional
 	Namespace *string `json:"namespace,omitempty"`
 	// Name is an alternate way of specifying the target cluster by its symbolic name
+	// +crossplane:generate:reference:type=github.com/crossplane-contrib/provider-argocd/apis/cluster/v1alpha1.Cluster
+	// +crossplane:generate:reference:extractor=github.com/crossplane-contrib/provider-argocd/apis/cluster/v1alpha1.ServerName()
+	// +crossplane:generate:reference:refFieldName=NameRef
+	// +crossplane:generate:reference:selectorFieldName=NameSelector
 	// +optional
 	Name *string `json:"name,omitempty"`
+	// NameRef is a reference to a Cluster used to set Name
+	// +optional
+	NameRef *xpv1.Reference `json:"nameRef,omitempty"`
+	// NameSelector is a reference to a Cluster used to set Name
+	// +optional
+	NameSelector *xpv1.Selector `json:"nameSelector,omitempty"`
 	// contains filtered or unexported fields
 }
 

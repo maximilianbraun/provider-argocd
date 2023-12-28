@@ -102,14 +102,15 @@ type ApplicationSources []ApplicationSource
 type ApplicationDestination struct {
 	// Server specifies the URL of the target cluster and must be set to the Kubernetes control plane API
 	// +crossplane:generate:reference:type=github.com/crossplane-contrib/provider-argocd/apis/cluster/v1alpha1.Cluster
+	// +crossplane:generate:reference:extractor=github.com/crossplane-contrib/provider-argocd/apis/cluster/v1alpha1.ServerAddress()
 	// +crossplane:generate:reference:refFieldName=ServerRef
 	// +crossplane:generate:reference:selectorFieldName=ServerSelector
 	// +optional
 	Server *string `json:"server,omitempty"`
-	// ServerRef is a reference to an Cluster used to set Server
+	// ServerRef is a reference to Cluster used to set Server
 	// +optional
 	ServerRef *xpv1.Reference `json:"serverRef,omitempty"`
-	// SourceReposSelector selects references to Repositories used to set SourceRepos
+	// ServerSelector selects references to Cluster used to set Server
 	// +optional
 	ServerSelector *xpv1.Selector `json:"serverSelector,omitempty"`
 	// Namespace specifies the target namespace for the application's resources.
@@ -117,8 +118,18 @@ type ApplicationDestination struct {
 	// +optional
 	Namespace *string `json:"namespace,omitempty"`
 	// Name is an alternate way of specifying the target cluster by its symbolic name
+	// +crossplane:generate:reference:type=github.com/crossplane-contrib/provider-argocd/apis/cluster/v1alpha1.Cluster
+	// +crossplane:generate:reference:extractor=github.com/crossplane-contrib/provider-argocd/apis/cluster/v1alpha1.ServerName()
+	// +crossplane:generate:reference:refFieldName=NameRef
+	// +crossplane:generate:reference:selectorFieldName=NameSelector
 	// +optional
 	Name *string `json:"name,omitempty"`
+	// NameRef is a reference to a Cluster used to set Name
+	// +optional
+	NameRef *xpv1.Reference `json:"nameRef,omitempty"`
+	// NameSelector is a reference to a Cluster used to set Name
+	// +optional
+	NameSelector *xpv1.Selector `json:"nameSelector,omitempty"`
 	// contains filtered or unexported fields
 }
 
