@@ -34,6 +34,14 @@ import (
 	"github.com/crossplane-contrib/provider-argocd/apis/v1alpha1"
 )
 
+const (
+	errNoAddrSet                  = "check provider config, neither .spec.ServerAddr nor spec.ServerAddrRef is set"
+	errNoneSourceType             = "None source for server address given, check provider config"
+	errGetSecretErr               = "cannot get server address secret"
+	errGetConfigmap               = "cannot get server address configmap"
+	errServerAdressTypeNotSupport = "server address source %s is not currently supported"
+)
+
 // NewClient creates new argocd Client with provided argocd Configurations/Credentials.
 func NewClient(opts *argocd.ClientOptions) *argocd.Client {
 	var cl argocd.Client
@@ -78,15 +86,44 @@ func UseProviderConfig(ctx context.Context, c client.Client, mg resource.Managed
 	}
 	grpcWeb := ptr.Deref(pc.Spec.GRPCWeb, false)
 	grpcWebRoot := ptr.Deref(pc.Spec.GRPCWebRootPath, "")
-
+	serverAddress, err := resolveServerAddress(ctx, c, pc.Spec)
+	if err != nil {
+		return nil, err
+	}
 	return &argocd.ClientOptions{
-		ServerAddr:      pc.Spec.ServerAddr,
+		ServerAddr:      serverAddress,
 		Insecure:        insecure,
 		PlainText:       plaintext,
 		AuthToken:       authToken,
 		GRPCWeb:         grpcWeb,
 		GRPCWebRootPath: grpcWebRoot,
 	}, nil
+}
+func resolveServerAddress(ctx context.Context, c client.Client, pc v1alpha1.ProviderConfigSpec) (string, error) {
+	if pc.ServerAddressReference == nil && pc.ServerAddr == nil {
+		return "", errors.New(errNoAddrSet)
+	}
+	if pc.ServerAddr != nil {
+		return *pc.ServerAddr, nil
+	}
+	switch pc.ServerAddressReference.Source {
+	case v1alpha1.ServerAddressSourceNone:
+		return "", errors.New(errNoneSourceType)
+	case v1alpha1.ServerAddressSourceSecret:
+		s := &corev1.Secret{}
+		if err := c.Get(ctx, types.NamespacedName{Namespace: pc.ServerAddressReference.Namespace, Name: pc.ServerAddressReference.Name}, s); err != nil {
+			return "", errors.Wrap(err, errGetSecretErr)
+		}
+		return string(s.Data[pc.ServerAddressReference.Key]), nil
+	case v1alpha1.ServerAddressSourceConfigMap:
+		cm := &corev1.ConfigMap{}
+		if err := c.Get(ctx, types.NamespacedName{Namespace: pc.ServerAddressReference.Namespace, Name: pc.ServerAddressReference.Name}, cm); err != nil {
+			return "", errors.Wrap(err, errGetConfigmap)
+		}
+		return cm.Data[pc.ServerAddressReference.Key], nil
+	default:
+		return "", errors.Errorf(errServerAdressTypeNotSupport, pc.ServerAddressReference.Source)
+	}
 }
 
 func authFromCredentials(ctx context.Context, c client.Client, creds v1alpha1.ProviderCredentials) (string, error) {

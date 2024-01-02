@@ -25,7 +25,12 @@ import (
 // A ProviderConfigSpec defines the desired state of a ProviderConfig.
 type ProviderConfigSpec struct {
 	// ServerAddr is the hostname or IP of the argocd instance
-	ServerAddr string `json:"serverAddr"`
+	// Either ServerAddr or ServerAddressReference must be set.
+	ServerAddr *string `json:"serverAddr,omitempty"`
+
+	// ServerAddressReference is a reference in an arbitrary namespace to a ServerAddr.
+	// If ServerAddr is set, this field is ignored.
+	ServerAddressReference *ServerReference `json:"serverAddrRef,omitempty"`
 
 	// PlainText specifies whether to use http vs https. Default: false.
 	// +optional
@@ -55,6 +60,50 @@ type ProviderCredentials struct {
 
 	xpv1.CommonCredentialSelectors `json:",inline"`
 }
+
+// ServerReference encapsulates configuration of ArgoCD server address.
+type ServerReference struct {
+	// Source of the provider credentials.
+	// +kubebuilder:validation:Enum=None;Secret;ConfigMap
+	Source ServerAddressSource `json:"source"`
+
+	SourceSelector `json:",inline"`
+}
+
+// A SourceSelector is a reference to a secret key in an arbitrary namespace.
+type SourceSelector struct {
+	SourceReference `json:",inline"`
+
+	// The key to select.
+	Key string `json:"key"`
+}
+
+// A SourceReference is a reference to a secret in an arbitrary namespace.
+type SourceReference struct {
+	// Name of the secret.
+	Name string `json:"name"`
+
+	// Namespace of the secret.
+	Namespace string `json:"namespace"`
+}
+
+// A ServerAddressSource is a source from which provider credentials may be
+// acquired.
+type ServerAddressSource string
+
+const (
+	// ServerAddressSourceNone indicates that a provider does not require
+	// credentials.
+	ServerAddressSourceNone ServerAddressSource = "None"
+
+	// ServerAddressSourceSecret indicates that a provider should acquire
+	// credentials from a secret.
+	ServerAddressSourceSecret ServerAddressSource = "Secret"
+
+	// ServerAddressSourceConfigMap indicates that a provider should acquire
+	// credentials from a configmap.
+	ServerAddressSourceConfigMap ServerAddressSource = "ConfigMap"
+)
 
 // A ProviderConfigStatus represents the status of a ProviderConfig.
 type ProviderConfigStatus struct {

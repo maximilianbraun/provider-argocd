@@ -117,10 +117,36 @@ spec:
                 type: boolean
               serverAddr:
                 description: ServerAddr is the hostname or IP of the argocd instance
+                  Either ServerAddr or ServerAddressReference must be set.
                 type: string
+              serverAddrRef:
+                description: ServerAddressReference is a reference in an arbitrary
+                  namespace to a ServerAddr. If ServerAddr is set, this field is ignored.
+                properties:
+                  key:
+                    description: The key to select.
+                    type: string
+                  name:
+                    description: Name of the secret.
+                    type: string
+                  namespace:
+                    description: Namespace of the secret.
+                    type: string
+                  source:
+                    description: Source of the provider credentials.
+                    enum:
+                    - None
+                    - Secret
+                    - ConfigMap
+                    type: string
+                required:
+                - key
+                - name
+                - namespace
+                - source
+                type: object
             required:
             - credentials
-            - serverAddr
             type: object
           status:
             description: A ProviderConfigStatus represents the status of a ProviderConfig.

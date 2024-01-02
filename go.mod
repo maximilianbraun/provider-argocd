@@ -11,6 +11,7 @@ require (
 	github.com/google/go-cmp v0.5.9
 	github.com/jmattheis/goverter v0.17.4
 	github.com/pkg/errors v0.9.1
+	github.com/stretchr/testify v1.8.4
 	google.golang.org/grpc v1.58.2
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
 	k8s.io/api v0.27.1
@@ -113,6 +114,7 @@ require (
 	github.com/patrickmn/go-cache v2.1.0+incompatible // indirect
 	github.com/peterbourgon/diskv v2.0.1+incompatible // indirect
 	github.com/pjbgf/sha1cd v0.3.0 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/prometheus/client_golang v1.16.0 // indirect
 	github.com/prometheus/client_model v0.3.0 // indirect
 	github.com/prometheus/common v0.42.0 // indirect

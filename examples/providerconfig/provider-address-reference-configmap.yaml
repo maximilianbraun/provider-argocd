@@ -1,0 +1,28 @@
+---
+# argocd provider that references the secret credentials and a secret with the server address
+apiVersion: argocd.crossplane.io/v1alpha1
+kind: ProviderConfig
+metadata:
+  name: argocd-provider
+spec:
+    serverAddrRef:
+        source: ConfigMap
+        namespace: crossplane-system
+        name: argocd-server
+        key: serverAddr
+    insecure: true
+    plainText: false
+    credentials:
+        source: Secret
+        secretRef:
+          namespace: crossplane-system
+          name: argocd-credentials
+          key: authToken
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: argocd-server
+  namespace: crossplane-system
+data:
+    serverAddr: "argocd-server.argocd.svc:443"
